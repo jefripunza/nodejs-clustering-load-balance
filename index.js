@@ -8,7 +8,9 @@ const { createServer } = require("node:http");
 
 const { v4: uuidv4 } = require("uuid");
 
-require("dotenv").config();
+if (cluster.isPrimary) {
+  require("dotenv").config();
+}
 
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
@@ -56,14 +58,17 @@ const server = createServer((req, res) => {
     return;
   }
 
-  res.end(
-    JSON.stringify({
+  const response = JSON.stringify(
+    {
       message: "Hello World!",
       worker: cluster.worker.id,
       pid: process.pid,
       uuid: uuidv4(),
-    })
+    },
+    null,
+    2
   );
+  res.end(response);
 });
 
 server.listen(port, () => {

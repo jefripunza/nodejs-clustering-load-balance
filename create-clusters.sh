@@ -4,6 +4,9 @@ FILE_TARGET="nginx.conf"
 
 # Mendapatkan nilai WORKER dari docker-compose.yaml
 WORKER=$(grep 'WORKER=' docker-compose.yaml | awk -F= '{print $2}')
+if [ -z "$WORKER" ]; then
+    WORKER=4
+fi
 
 # Membuat file nginx.conf
 {
@@ -14,12 +17,21 @@ events {
 }
 
 http {
-    upstream servers {"
+    upstream servers {
+        least_conn;"  # Menambahkan least_conn di sini
 
-    # Menambahkan setiap server nodejs_clusters ke dalam upstream
+    # Menambahkan setiap server clusters ke dalam upstream
     for ((i=1; i<=$WORKER; i++))
     do
-        echo "        server nodejs_clusters:300$i;" 
+        # Memeriksa jumlah digit pada nomor port
+        if [[ $i -lt 10 ]]; then
+            PORT="300$i"
+        elif [[ $i -lt 100 ]]; then
+            PORT="30$i"
+        else
+            PORT="3$i"
+        fi
+        echo "        server clusters:$PORT;" 
     done
 
     # Menutup blok upstream dan menambahkan server blok
@@ -35,6 +47,9 @@ http {
             proxy_set_header Connection 'upgrade';
             proxy_set_header Host \$host;
             proxy_cache_bypass \$http_upgrade;
+
+            # Tambahkan baris berikut untuk mengatur pengaturan reconnect
+            proxy_next_upstream error timeout http_500 http_502 http_503 http_504;
         }
     }
 }" 
