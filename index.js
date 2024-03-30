@@ -13,7 +13,7 @@ require("dotenv").config();
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 
-const defaultPort = 3001; // 3000 is NGINX
+const defaultPort = 3001; // 3000 or 80 is NGINX
 const port = process.env.PORT ?? defaultPort;
 const worker = process.env.WORKER;
 

@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
-      - PORT=3001
-      - WORKER=5
+      - WORKER=10
+
       # inject on secret...
       - MONGO_URL=
       - MONGO_NAME=
@@ -30,7 +30,6 @@ services:
           - nginx
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-
 networks:
   my_network:
     driver: bridge
