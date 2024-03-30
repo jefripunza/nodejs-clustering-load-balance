@@ -8,11 +8,13 @@ const { createServer } = require("node:http");
 
 const { v4: uuidv4 } = require("uuid");
 
+require("dotenv").config();
+
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 
-const primaryPort = 3000;
-const port = process.env.PORT ?? primaryPort;
+const defaultPort = 3001; // 3000 is NGINX
+const port = process.env.PORT ?? defaultPort;
 const worker = process.env.WORKER;
 
 // ----------------------------------------------------------------------
@@ -37,13 +39,16 @@ if (cluster.isPrimary) {
   return;
 }
 
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+
 const server = createServer((req, res) => {
-  res.writeHead(200, { 
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Credentials': 'true',
+  res.writeHead(200, {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true",
   });
   if (req.method === "OPTIONS") {
     res.writeHead(200);
@@ -51,14 +56,16 @@ const server = createServer((req, res) => {
     return;
   }
 
-  res.end(JSON.stringify({
-    message: "Hello World!",
-    worker: cluster.worker.id,
-    pid: process.pid,
-    uuid: uuidv4(),
-  }));
+  res.end(
+    JSON.stringify({
+      message: "Hello World!",
+      worker: cluster.worker.id,
+      pid: process.pid,
+      uuid: uuidv4(),
+    })
+  );
 });
-// starts a simple http server locally on port 3000
-server.listen(port, '127.0.0.1', () => {
-  console.log(`Listening on 127.0.0.1:${port}`);
+
+server.listen(port, () => {
+  console.log(`Listening on http://localhost:${port}`);
 });

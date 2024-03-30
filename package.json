@@ -4,13 +4,30 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "compile": "pkg . --output ./build/run.exe",
+    "prepare:project": "npm i -g yarn cross-env",
+    "reinstall": "cross-env rm -rf node_modules && npm i",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": "./index.js",
+  "pkg": {
+    "assets": [
+      "public/**/*"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^18.0.6",
+    "dotenv": "^16.4.5",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
   }
 }
