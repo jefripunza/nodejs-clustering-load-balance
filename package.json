@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "compile": "pkg . --output ./build/run.exe",
+    "compile": "ncc build index.js -o dist && pkg . --compress GZip --output ./build/run.exe",
+    "clear": "cross-env rm -rf build dist nginx.conf",
     "prepare:project": "npm i -g yarn cross-env",
     "reinstall": "cross-env rm -rf node_modules && npm i",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin": "./index.js",
+  "bin": "./dist/index.js",
   "pkg": {
     "assets": [
       "public/**/*"
@@ -24,11 +25,25 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^18.0.6",
-    "axios": "^1.6.8",
+    "awesome-phonenumber": "^6.6.0",
+    "axios": "^0.27.2",
+    "base-64": "^1.0.0",
+    "crypto-js": "^4.2.0",
+    "docxtemplater": "^3.46.2",
     "dotenv": "^16.4.5",
-    "formidable": "^3.5.1"
+    "exceljs": "^4.4.0",
+    "formidable": "^3.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
+    "mongodb": "^6.5.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.9.3",
+    "papaparse": "^5.4.1",
+    "pg": "^8.11.4",
+    "pizzip": "^3.1.6"
   },
   "devDependencies": {
+    "@vercel/ncc": "^0.38.1",
     "pkg": "^5.8.1"
   }
 }
