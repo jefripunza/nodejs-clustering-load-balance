@@ -11,12 +11,12 @@ const { parentPort } = require('worker_threads');
 const base64 = require('base-64');
 const CryptoJS = require('crypto-js');
 const { white } = require('chalk');
-const axios = require('axios/dist/node/axios.cjs');
+const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const { MongoClient, ObjectId } = require('mongodb');
 const knex = require('knex');
 const mysql2 = require('mysql2');
-const pg = require('pg');
+const { Client: PgClient } = require('pg');
 const { parsePhoneNumber } = require('awesome-phonenumber');
 
 //-> reporting...
@@ -40,7 +40,7 @@ parentPort.on('message', async (e) => {
     parentPort.postMessage({ status: "log", args });
   };
   try {
-    const result = await eval(\`(async () => { \${e.dependencies}\\n\${e.script} })()\`);
+    const result = await eval(\`(async () => { \${e.dependencies}\\n;\${e.script} })();\`);
     parentPort.postMessage({ status: "success", result });
   } catch (error) {
     parentPort.postMessage({ status: "error", error: error.toString() });
@@ -63,7 +63,7 @@ exports.executeScript = async (request_id, script) => {
       );
     }, 1000 * timeout_second);
 
-    worker.on("message", (e) => {
+    worker.on("message", async (e) => {
       const { args, status, error, result } = e;
       if (status === "log") {
         // send log

@@ -2,7 +2,13 @@ module.exports = [
   {
     endpoint: "/product/:product_id",
     method: "POST",
-    script: "return { done: true, req }",
+    script: `
+console.log("Start...");
+
+return {
+  done: true,
+  req,
+}`,
   },
 ];
 

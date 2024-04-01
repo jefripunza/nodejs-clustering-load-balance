@@ -3,17 +3,24 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node index.js",
-    "compile": "ncc build index.js -o dist && pkg . --compress GZip --output ./build/run.exe",
-    "clear": "cross-env rm -rf build dist nginx.conf",
+    "start:fast": "node ./dist/index.js",
+    "compile": "npm run clean && npm run compile:single-file && npm run compile:esbuild && npm run compile:executable",
+    "compile:single-file": "ncc build index.js -o dist",
+    "compile:esbuild": "esbuild ./dist/index.js --bundle --platform=node --outfile=./dist/index.cjs --define:import.meta.url=__dirname",
+    "compile:executable": "npx pkg --output ./build/run.exe --compress GZip .",
+    "clean": "cross-env rm -rf build dist",
     "prepare:project": "npm i -g yarn cross-env",
     "reinstall": "cross-env rm -rf node_modules && npm i",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin": "./dist/index.js",
+  "bin": "./dist/index.cjs",
   "pkg": {
     "assets": [
+      "node_modules/axios/**",
+      "node_modules/pg/**",
       "public/**/*"
     ],
     "targets": [
@@ -44,6 +51,7 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.38.1",
+    "esbuild": "0.20.2",
     "pkg": "^5.8.1"
   }
 }

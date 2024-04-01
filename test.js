@@ -1,6 +1,6 @@
 const { exec } = require("child_process");
 const fs = require("fs");
-const axios = require('axios/dist/node/axios.cjs');
+const axios = require('axios');
 
 // Function untuk melakukan request
 const request = (host) => {
