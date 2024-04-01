@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - '3001:3001' # pasti ada...
+    # ports:
+    #   - '3001:3001' # pasti ada...
     environment:
       - WORKER=16
 
@@ -15,8 +15,8 @@ services:
       - MONGO_NAME=
     networks:
       - my_network
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    # extra_hosts:
+    #   - 'host.docker.internal:host-gateway'
   nginx:
     image: nginx:latest
     restart: always
