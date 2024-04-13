@@ -1,6 +1,6 @@
 const { exec } = require("child_process");
 const fs = require("fs");
-const axios = require('axios');
+const axios = require("axios"); // ok
 
 // Function untuk melakukan request
 const request = (host) => {
